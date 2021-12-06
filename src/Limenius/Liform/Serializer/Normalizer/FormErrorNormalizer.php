@@ -11,6 +11,7 @@
 
 namespace Limenius\Liform\Serializer\Normalizer;
 
+use ArrayObject;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -39,8 +40,11 @@ class FormErrorNormalizer implements NormalizerInterface
     /**
      * {@inheritdoc}
      */
-    public function normalize($object, $format = null, array $context = [])
-    {
+    public function normalize(
+        mixed $object,
+        string $format = null,
+        array $context = []
+    ): array|string|int|float|bool|ArrayObject|null {
         return [
             'code' => isset($context['status_code']) ? $context['status_code'] : null,
             'message' => 'Validation Failed',
@@ -51,7 +55,7 @@ class FormErrorNormalizer implements NormalizerInterface
     /**
      * {@inheritdoc}
      */
-    public function supportsNormalization($data, $format = null)
+    public function supportsNormalization(mixed $data, string $format = null): bool
     {
         return $data instanceof FormInterface && $data->isSubmitted() && !$data->isValid();
     }
